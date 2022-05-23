@@ -9,23 +9,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CatsRequest {
-
-    public String id;
-    public String text;
-    public String type;
-    public String user;
-    public Integer upvotes;
-
-    public CatsRequest(){}
-
-    public Integer getUpvotes() {
-        return upvotes;
-    }
+public class CatsResponse {
 
     public static void main(String[] args) {
 
-        List<CatsRequest> result = null;
+        List<Entity> result = null;
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create()
                 .setDefaultRequestConfig(RequestConfig.custom()
@@ -37,7 +25,7 @@ public class CatsRequest {
              ; CloseableHttpResponse response = httpClient.execute(new HttpGet(
                      "https://raw.githubusercontent.com/netology-code/jd-homeworks/master/http/task1/cats"))) {
             if (response.getStatusLine().getStatusCode() == 200) {
-                result = new ObjectMapper().readValue(response.getEntity().getContent(), new TypeReference<List<CatsRequest>>(){});
+                result = new ObjectMapper().readValue(response.getEntity().getContent(), new TypeReference<List<Entity>>(){});
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,10 +40,23 @@ public class CatsRequest {
         System.out.println(result);
     }
 
-    public String toString() {
-        return "{id: " + id + ", "
-                + "text: " + text + ", "
-                + "type: " + type + ", "
-                + "upvotes: " + upvotes + "}";
+    static class Entity {
+
+        public String id;
+        public String text;
+        public String type;
+        public String user;
+        public Integer upvotes;
+
+        public Integer getUpvotes() {
+            return upvotes;
+        }
+
+        public String toString() {
+            return "{id: " + id + ", "
+                    + "text: " + text + ", "
+                    + "type: " + type + ", "
+                    + "upvotes: " + upvotes + "}";
+        }
     }
 }
